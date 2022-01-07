@@ -3,38 +3,88 @@ App = {
     loading: false,
     contracts: {},
     accounts: [],
+    blockchainEndPoint: "https://rinkeby.infura.io/v3/264fc3a9d7ad497bb451317050c5ab51",
+    contractAddress: "0xd7306cBaB8Cfe2b9Db05124697803C1F6D36f029",
+    
     load: async () => {
-        await App.loadWeb3();
-        await App.loadContract();
-        await App.renderTweets();
+        await App.connectMetamaskAndLoad();
     },
 
-    loadWeb3: async () => {
-        if (window.ethereum) {
-            window.web3 = new Web3(ethereum);
-            try {
-                accounts = await ethereum.request({ method: "eth_requestAccounts" });
-                web3.eth.defaultAccount = accounts[0];
+    connectMetamaskAndLoad: async () => {
+        try {
+            App.accounts = await window.ethereum.request({
+            method: 'eth_requestAccounts',
+            }); //connect Metamask
+            const provider = new ethers.providers.Web3Provider(window.ethereum);
+            const network = await provider.getNetwork();
+            const chains = ['', 'main', 'kovan', 'ropsten', 'rinkeby', 'Goerli'];
+
+            window.ethereum.on('chainChanged', (chainId) => {
+                // Correctly handling chain changes can be complicated. We recommend reloading the page unless you have good reason not to.
+                window.location.reload();
+            });
+
+            window.ethereum.on('accountsChanged', (updatedAccounts) => {
+                // Handle the new accounts, or lack thereof.
+                // "accounts" will always be an array, but it can be empty.
+                window.location.reload();
+            });
+
+            if (network.chainId !== 4 ) {
+                window.alert(
+                    "Please connect to rinkeby network on your MetaMask wallet. You are connected to '" +
+                    network.name +
+                    "'.",
+                );
+                return;
             }
-            catch (error) {
-                console.log(error);
-            }
+
+            await App.loadContract();
+        } catch (e) {
+            console.log(e);
+            window.alert(
+            'In order to log in, please install the MetaMask wallet at metamask.io and set it up in your browser.',
+            );
+            return;
         }
-        else {
-            alert("Non-Ethereum browser detected. You should consider trying MetaMask!");
-        }
+    },
+
+    getContractInstance: async() => {
+        const ethersProvider = new ethers.providers.JsonRpcProvider(
+            App.blockchainEndPoint,
+        );
+
+        var contractJson = await $.getJSON("TweetManager.json");
+
+        const contractAbi = contractJson.abi;
+        const contractInstance = new ethers.Contract(
+            App.contractAddress,
+            contractAbi,
+            ethersProvider,
+          );
+        return contractInstance;
+    },
+    
+    getContractWriter: async() => {
+        const ethersProvider = new ethers.providers.Web3Provider(window.ethereum);
+        var contractJson = await $.getJSON("TweetManager.json");
+        const contractAbi = contractJson.abi;
+        const contractContract = new ethers.Contract(
+            App.contractAddress,
+            contractAbi,
+            ethersProvider,
+        );
+        await window.ethereum.enable(); //connect Metamask
+            
+        const fromSigner = ethersProvider.getSigner();
+        const fromSignerContract = contractContract.connect(fromSigner);
+        return fromSignerContract;        
     },
 
     loadContract: async () => {
-        // Create a JavaScript version of the smart contract
-        const tweetManager = await $.getJSON("TweetManager.json");
-        App.contracts.TweetManager = TruffleContract(tweetManager);
-        App.contracts.TweetManager.setProvider(
-            new Web3.providers.HttpProvider("http://127.0.0.1:7545")
-        );
-
-        App.tweetManager = await App.contracts.TweetManager.deployed();
+        App.tweetManager = await App.getContractInstance();
         console.log('Contract loaded.');
+        await App.renderTweets();
     },
 
     createTweet: async () => {
@@ -43,16 +93,17 @@ App = {
             const overlay = document.getElementById("overlay");
             const success_message = document.getElementById("success");
             overlay.style.display = 'block';
-            await App.loadWeb3();
-
+            
             const new_content = document.getElementById("new-tweet").value;
             document.getElementById("new-tweet").value = "";
-            await App.tweetManager.createTweet(new_content, { from: web3.eth.defaultAccount });
+            
+            var contractWriter = await App.getContractWriter();
+            await contractWriter.createTweet(new_content);
 
             const tweetCount = await App.tweetManager.tweetCount();
             const tweet = await App.tweetManager.tweets(tweetCount);
             const ownerAddress = await App.tweetManager.owner();
-            const isOwner = web3.eth.defaultAccount == ownerAddress;
+            const isOwner = App.accounts[0].toLowerCase() == ownerAddress.toLowerCase();
 
             const id = tweet.id.toNumber();
             const content = tweet.content;
@@ -70,7 +121,7 @@ App = {
             newTweetTemplate.children[1].children[1].children[3].setAttribute("id", id);
             newTweetTemplate.children[1].children[1].children[4].setAttribute("id", id);
 
-            if (web3.eth.defaultAccount != user) {
+            if (App.accounts[0] != user) {
                 //add delete button if its your tweet
                 newTweetTemplate.children[1].children[1].children[4].style.display = "none";
             }
@@ -144,7 +195,8 @@ App = {
             elem.style.display = "none";
             elem.parentNode.children[3].style.display = "block";
 
-            await App.tweetManager.likeTweet(parseInt(elem.id), { from: web3.eth.defaultAccount });
+            var contractWriter = await App.getContractWriter();
+            await contractWriter.likeTweet(parseInt(elem.id));
             console.log('tweet liked.');
         }
         catch (error) {
@@ -163,7 +215,8 @@ App = {
             elem.style.display = "none";
             elem.parentNode.children[2].style.display = "block";
 
-            await App.tweetManager.unlikeTweet(parseInt(elem.id), { from: web3.eth.defaultAccount });
+            var contractWriter = await App.getContractWriter();
+            await contractWriter.unlikeTweet(parseInt(elem.id));
             console.log('tweet unliked.');
         }
         catch (error) {
@@ -183,8 +236,9 @@ App = {
             const success_message = document.getElementById("success");
             overlay.style.display = 'block';
 
-            await App.loadWeb3();
-            await App.tweetManager.deleteTweet(parseInt(elem.id), { from: web3.eth.defaultAccount });
+            //await App.loadWeb3();
+            var contractWriter = await App.getContractWriter();
+            await contractWriter.deleteTweet(parseInt(elem.id));
             console.log('tweet deleted.');
 
             overlay.style.display = 'none';
@@ -209,8 +263,9 @@ App = {
             const success_message = document.getElementById("success");
             overlay.style.display = 'block';
 
-            await App.loadWeb3();
-            await App.tweetManager.banUser(user, { from: web3.eth.defaultAccount });
+            //await App.loadWeb3();
+            var contractWriter = await App.getContractWriter();
+            await contractWriter.banUser(user);
             console.log("user has been banned.");
 
             overlay.style.display = 'none';
@@ -235,8 +290,9 @@ App = {
             const success_message = document.getElementById("success");
             overlay.style.display = 'block';
 
-            await App.loadWeb3();
-            await App.tweetManager.unbanUser(user, { from: web3.eth.defaultAccount });
+            //await App.loadWeb3();
+            var contractWriter = await App.getContractWriter();
+            await contractWriter.unbanUser(user);
             console.log("user has been unbanned.");
 
             overlay.style.display = 'none';
@@ -260,7 +316,7 @@ App = {
             const tweetCount = await App.tweetManager.tweetCount();
             // console.log(tweetCount.toNumber());
             const ownerAddress = await App.tweetManager.owner();
-            const isOwner = web3.eth.defaultAccount == ownerAddress;
+            const isOwner = App.accounts[0].toLowerCase() == ownerAddress.toLowerCase();
 
             for (let i = 1; i <= tweetCount.toNumber(); i++) {
                 const tweet = await App.tweetManager.tweets(i);
@@ -281,7 +337,7 @@ App = {
                     newTweetTemplate.children[1].children[1].children[3].setAttribute("id", id);
                     newTweetTemplate.children[1].children[1].children[4].setAttribute("id", id);
 
-                    if (web3.eth.defaultAccount != user) {
+                    if (App.accounts[0] != user) {
                         //add delete button if its your tweet
                         newTweetTemplate.children[1].children[1].children[4].style.display = "none";
                     }
