@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Twitter</title>
+
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css"
+    integrity="sha512-YWzhKL2whUzgiheMoBFwW8CKV4qpHQAEuvilg9FAn5VJUDwKZZxkJNuGM4XkWuk94WCrrwslk8yWNGmY1EduTA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="./style.css" />
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js@1.5.2/dist/web3.min.js"></script>
+  <script src="vendor/@truffle/contract/dist/truffle-contract.min.js"></script>
+  <script src="app.js"></script>
+</head>
+
+<body>
+
+  <!--sidebar-->
+  <div class="sidebar">
+    <i class="fab fa-twitter"></i>
+    <div class="sidebarOption active">
+      <span class="material-icons">home</span>
+      <h3>&nbsp;&nbsp;Home</h3>
+    </div>
+    <div class="sidebarOption">
+      <span class="material-icons"> tag </span>
+      <h3>&nbsp;&nbsp;Explore</h3>
+      <!-- <img src="./assests/tag.png" alt=""> -->
+    </div>
+    <div class="sidebarOption">
+      <span class="material-icons">notifications</span>
+      <h3>&nbsp;&nbsp;Notifications</h3>
+    </div>
+    <div class="sidebarOption">
+      <span class="material-icons">mail_outline</span>
+      <h3>&nbsp;&nbsp;Messages</h3>
+    </div>
+    <div class="sidebarOption">
+      <span class="material-icons">person_outline</span>
+      <h3>&nbsp;&nbsp;Profile</h3>
+    </div>
+    <!-- <div class="sidebarOption">
+      <span class="material-icons">more_horiz</span>
+    </div> -->
+    <a href="#feed-id">
+      <button class="sidebar-button">Tweet</button>
+    </a>
+  </div>
+  <!--sidebar-->
+  <!--Feed-->
+  <div class="feed">
+    <div class="overlay" id="overlay">
+      <div class="loader-container">
+        <div class="lds-ring">
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="alert-success" id="success">
+      <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+      <p></p>
+    </div>
+
+    <div class="alert" id="error">
+      <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+      <p></p>
+    </div>
+
+    <div class="feed_header">
+      <h2>Home</h2>
+    </div>
+
+    <div id="feed-id">
+      <br />
+      <br />
+    </div>
+
+    <!--tweetbox-->
+    <div class="tweetbox">
+      <form id="myform" onSubmit="App.createTweet(); return false;">
+        <div class="tweetbox-input">
+          <img src="https://www.pngarts.com/files/11/Avatar-PNG-Picture.png" alt="" />
+          <input type="text" id="new-tweet" placeholder="What's Happening?" />
+        </div>
+        <input id="tweet-button" type="submit" value="Tweet" /><br />
+      </form>
+    </div>
+
+    <!-- tweetbox -->
+
+    <!-- post -->
+
+    <ul id="tweetList" class="list-unstyled">
+      <div class="post" id="tweetTemplate" style="display: none">
+        <div class="post-avatar">
+          <img src="https://www.pngarts.com/files/11/Avatar-PNG-Picture.png" alt="" />
+        </div>
+        <div class="postbody">
+          <div class="postheader">
+            <div class="postheader-text">
+              <h3>
+                Sample User
+                <span class="postheader-special">
+                  <span class="material-icons post-badge">verified</span>Sample @
+                </span>
+              </h3>
+            </div>
+            <div id="content">
+              <p><span id="display"></span></p>
+            </div>
+          </div>
+          <div class="postfooter" style="padding-right: 20px;">
+            <span class="material-icons footer">reply</span>
+            <span class="material-icons footer">repeat</span>
+            <span class="material-icons footer" onClick="App.likeTweet(this);"
+              style="cursor: pointer;">favorite_border</span>
+            <span class="material-icons footer" onClick="App.unlikeTweet(this);"
+              style="color:#ff2052; cursor: pointer;">favorite</span>
+            <span class="material-icons footer" onClick="App.deleteTweet(this);" style="cursor: pointer;">delete</span>
+          </div>
+        </div>
+      </div>
+    </ul>
+  </div>
+
+  <!-- widgetsection -->
+  <div class="widgets">
+    <div class="widgets-input">
+      <span class="material-icons searchicon">search</span>
+      <input type="text" placeholder="Search Twitter" />
+    </div>
+    <div class="widget-container">
+      <h2>What's Happening?</h2>
+      <a class="twitter-timeline" href="https://twitter.com/TwitterDev/lists/national-parks?ref_src=twsrc%5Etfw">A
+        Twitter List by TwitterDev</a>
+      <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    </div>
+  </div>
+</body>
+
+</html>
+
+<!-- <script type="text/javascript">
+async function likeTweet(elem) {
+	const BASE_URL = "http://localhost:3000";
+	const response = await axios.post(`${BASE_URL}/like-tweet`, {
+		id: elem.id
+	});
+}
+
+async function unlikeTweet(elem) {
+	const BASE_URL = "http://localhost:3000";
+	const response = await axios.post(`${BASE_URL}/unlike-tweet`, {
+		id: elem.id
+	});
+}
+</script> -->

@@ -1,0 +1,469 @@
+* {
+    margin    : 0;
+    padding   : 0;
+    box-sizing: border-box;
+}
+
+.overlay {
+    position        : fixed;
+    display         : none;
+    width           : 100%;
+    height          : 100%;
+    top             : 0;
+    left            : 0;
+    right           : 0;
+    bottom          : 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index         : 101;
+}
+
+.loader-container {
+    display        : flex;
+    height         : 100%;
+    width          : 100%;
+    align-items    : center;
+    justify-content: center;
+}
+
+.alert-success {
+    background-color: #04AA6D;
+    padding: 20px;
+    color: white;
+    display: none;
+}
+
+.alert {
+    padding: 20px;
+    background-color: #f44336;
+    color: white;
+    display: none;
+  }
+
+.closebtn {
+    margin-left: 15px;
+    color: white;
+    font-weight: bold;
+    float: right;
+    font-size: 22px;
+    line-height: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  
+  .closebtn:hover {
+    color: black;
+  }
+
+.error-message-container {
+
+}
+
+.lds-ring {
+    display : inline-block;
+    position: relative;
+    width   : 80px;
+    height  : 80px;
+}
+
+.lds-ring div {
+    box-sizing   : border-box;
+    display      : block;
+    position     : absolute;
+    width        : 64px;
+    height       : 64px;
+    margin       : 8px;
+    border       : 8px solid #50b7f5;
+    border-radius: 50%;
+    animation    : lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+    border-color : #50b7f5 transparent transparent transparent;
+}
+
+.lds-ring div:nth-child(1) {
+    animation-delay: -0.45s;
+}
+
+.lds-ring div:nth-child(2) {
+    animation-delay: -0.3s;
+}
+
+.lds-ring div:nth-child(3) {
+    animation-delay: -0.15s;
+}
+
+@keyframes lds-ring {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+
+body {
+    --twitter-color     : #50b7f5;
+    --twitter-background: #e6ecf0;
+}
+
+.sidebarOption {
+    display          : flex;
+    align-items      : center;
+    /* vertical-align: middle; */
+    cursor           : pointer;
+}
+
+.sidebarOption,
+.material-icons {
+    padding-top    : 4px;
+    padding-bottom : 4px;
+    justify-content: center;
+
+}
+
+.sidebarOption:hover {
+    background-color: var(--twitter-background);
+    border-radius   : 30px;
+    color           : var(--twitter-color);
+    transition      : color 100ms ease-out;
+
+}
+
+.sidebar-button {
+    width           : 100%;
+    background-color: var(--twitter-color);
+    border          : none;
+    color           : white;
+    font-weight     : 900;
+    border-radius   : 30px;
+    height          : 50px;
+    margin-top      : 20px;
+}
+
+body {
+    display     : flex;
+    height      : 100vh;
+    max-width   : 1300px;
+    margin-left : auto;
+    margin-right: auto;
+    padding     : 0 10px;
+}
+
+.sidebar {
+    border-right : 1px solid var(--twitter-background);
+    flex         : 0.2;
+    min-width    : 250px;
+    margin-top   : 20px;
+    padding-left : 20px;
+    padding-right: 20px;
+    /* position  : center; */
+}
+
+/* .material-icons{
+    padding-left:100px;
+} */
+.fa-twitter {
+    display        : flex;
+    padding-bottom : 4px;
+    color          : #50b7f5;
+    font-size      : 30px;
+    justify-content: center;
+}
+
+
+/* feed */
+.feed {
+    flex        : 0.5;
+    border-right: 1px solid var(--twitter-background);
+    width: 50%;
+    overflow-y  : scroll;
+
+}
+
+.feed_header {
+    position        : sticky;
+    top             : 0;
+    background-color: white;
+    z-index         : 100;
+    border          : 1px solid var(--twitter-background);
+    padding         : 15px 20px;
+}
+
+.feed_header h2 {
+    font-size  : 20px;
+    font-weight: 800;
+}
+
+.feed::-webkit-scrollbar {
+    display: none;
+}
+
+.feed {
+    -ms-overflow-style: none;
+    scrollbar-width   : none;
+}
+
+/* tweetbox */
+.tweetbox-input img {
+    border-radius: 50%;
+    height       : 40px;
+}
+
+.tweetbox {
+    padding-bottom: 10px;
+    border-bottom : 8px solid var(--twitter-background);
+    padding-right : 10px;
+}
+
+.tweetbox form {
+    display       : flex;
+    flex-direction: column;
+}
+
+.tweetbox-input {
+    display: flex;
+    padding: 20px;
+}
+
+.tweetbox-input input {
+    flex       : 1;
+    margin-left: 20px;
+    font-size  : 20px;
+    border     : none;
+    outline    : none;
+}
+
+#tweet-button {
+    background-color: var(--twitter-color);
+    border          : none;
+    color           : white;
+    font-weight     : 900;
+    border-radius   : 30px;
+    width           : 80px;
+    height          : 40px;
+    margin-top      : 20px;
+    margin-left     : auto;
+}
+
+/* posts */
+.post-avatar img {
+    border-radius: 50%;
+    height       : 40px;
+
+}
+
+.post {
+    display       : flex;
+    align-items   : flex-start;
+    border-bottom : 1px solid var(--twitter-background);
+    padding-bottom: 10px;
+}
+
+.postbody img {
+    width        : 500px;
+    object-fit   : contain;
+    border-radius: 20px;
+}
+
+.postfooter {
+    display        : flex;
+    justify-content: space-between;
+    margin-top     : 10px;
+}
+
+.footer {
+    padding-left: 10px;
+}
+
+.post-badge {
+    font-size   : 14px !important;
+    color       : var(--twitter-color);
+    margin-right: 5px;
+    padding-left: 5px;
+}
+
+.postheader-special {
+    font-weight: 600;
+    font-size  : 12px;
+    color      : grey;
+}
+
+.postheader-text h3 {
+    font-size    : 15px;
+    margin-bottom: 5px;
+}
+
+.postheader-discription {
+    margin-bottom: 10px;
+    font-size    : 15px;
+    margin-left  : 10px;
+}
+
+.postbody {
+    flex   : 1;
+    padding: 10px;
+}
+
+.post-avatar {
+    padding: 20px;
+}
+
+/* widgets */
+.widgets {
+    flex: 0.3;
+}
+
+.widgets-input {
+    display         : flex;
+    align-items     : center;
+    background-color: var(--twitter-background-color);
+    padding         : 10px;
+    border-radius   : 20px;
+    margin-top      : 10px;
+    margin-left     : 20px;
+}
+
+.widgets-input input {
+    border-radius   : none;
+    background-color: var(--twitter-background);
+    outline         : none;
+}
+
+.searchicon {
+    padding-left: 5px;
+    color       : grey;
+}
+
+.widget-container {
+    margin-top      : 15px;
+    margin-left     : 20px;
+    padding         : 20px;
+    background-color: #f5f8fa;
+    border-radius   : 20px;
+}
+
+.widget-container h2 {
+    font-size  : 20px;
+    font-weight: 800px;
+}
+
+#my_id {
+    display: none;
+}
+
+#tweetList {
+    display       : flex;
+    flex-direction: column-reverse;
+}
+
+.tfeeds {
+    display       : flex;
+    flex-direction: column;
+}
+
+:root {
+    --red  : rgb(209, 3, 3);
+    --white: #fff;
+    --black: #000;
+}
+
+.btn {
+    width          : 20px;
+    height         : 20px;
+    outline        : 0;
+    /* border      : 2px solid #ccc; */
+    color          : #000;
+    cursor         : pointer;
+    overflow       : hidden;
+    position       : relative;
+    display        : flex;
+    justify-content: space-between;
+    /* box-shadow  : 0px 3px 25px rgba(0, 0, 0, 0.05); */
+    transition     : 1.5s cubic-bezier(.21, .04, .26, .99);
+}
+
+.btn:hover {
+    box-shadow     : 0px 3px 25px rgba(0, 0, 0, 0.2);
+    /* border-color: var(--red); */
+}
+
+.btn-like {
+    padding      : 10px 25px 25px 25px;
+    font-size    : 15px;
+    border-radius: 10px;
+    background   : #fff;
+    transition   : 1.5s cubic-bezier(.21, .04, .26, .99);
+}
+
+.btn-like.liked {
+    background  : var(--red);
+    border-color: var(--red);
+}
+
+/*-- Button Icon -- */
+.btn-icon {
+    display   : inline-block;
+    width     : 32px;
+    height    : 36px;
+    position  : absolute;
+    left      : 1.5rem;
+    transition: 1s cubic-bezier(.21, .04, .26, .99);
+    transform : rotate(0deg)
+}
+
+.btn:hover .btn-icon {
+    color: var(--red);
+}
+
+.btn.liked:hover .btn-icon {
+    color: var(--black);
+}
+
+.liked .btn--icon-default {
+    transform: rotate(-90deg)
+}
+
+.btn:not(.liked).btn--icon-liked {
+    transform: rotate(-90deg)
+}
+
+.liked .btn--icon-default,
+.btn--icon-liked {
+    opacity : 0;
+    color   : #fff;
+    position: absolute;
+}
+
+.btn--icon-default,
+.liked .btn--icon-liked {
+    opacity: 1;
+    left   : 1.5rem;
+}
+
+/*-- Button Content -- */
+.btn-content {
+    transition : transform 0.1s ease;
+    display    : inline-block;
+    /* position: absolute;
+    right      : 0; */
+}
+
+.liked .btn-content {
+    color: var(--white);
+}
+
+.btn:hover.liked .btn-content {
+    color: var(--black);
+}
+
+.btn:not(.liked) .btn-content--liked {
+    transform: translate(110px)
+}
+
+.btn:not(.liked) .btn-content--default {
+    transform: translate(-56px)
+}
+
+.liked .btn-content--default {
+    transform: translate(24px)
+}
