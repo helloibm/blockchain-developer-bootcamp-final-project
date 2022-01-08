@@ -27,7 +27,8 @@ Run the command:
 ### Project hosted at
 https://helloibm.github.io/blockchain-developer-bootcamp-final-project/src/
 
-### Project recording available at
+### Project recording available in webm format at
+https://github.com/helloibm/blockchain-developer-bootcamp-final-project/blob/main/project-recording.webm
 
 
 
