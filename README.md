@@ -22,7 +22,7 @@ Run the command:
 * `truffle test`
 
 ### Public Ethereum Address for NFT Certificate
-0x801454B890a2921EdFEa3b4E6226c7f87a9C4C16
+0xCda8881a442C003E8e6Da85A3e7e9a990CD7F818
 
 ### Project hosted at
 https://helloibm.github.io/blockchain-developer-bootcamp-final-project/src/
