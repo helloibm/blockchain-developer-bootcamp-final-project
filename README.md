@@ -24,4 +24,10 @@ Run the command:
 ### Public Ethereum Address for NFT Certificate
 0x801454B890a2921EdFEa3b4E6226c7f87a9C4C16
 
+### Project hosted at
+https://helloibm.github.io/blockchain-developer-bootcamp-final-project/src/
+
+### Project recording available at
+
+
 
