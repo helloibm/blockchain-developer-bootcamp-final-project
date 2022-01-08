@@ -21,4 +21,7 @@ Run the following commands:
 Run the command: 
 * `truffle test`
 
+### Public Ethereum Address for NFT Certificate
+0x801454B890a2921EdFEa3b4E6226c7f87a9C4C16
+
 

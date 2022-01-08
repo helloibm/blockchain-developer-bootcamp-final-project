@@ -1,2 +1,2 @@
-Network: Ganache local blockchain
-RPC URL: 127.0.0.1:7545
+Network: Rinkeby
+RPC URL: https://rinkeby.etherscan.io/address/0xd7306cBaB8Cfe2b9Db05124697803C1F6D36f029
